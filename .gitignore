@@ -1,0 +1,27 @@
+# data files
+data/raw/
+data/preprocessed/
+data/final/
+*.csv
+
+# models
+models/
+*.joblib
+*.pkl
+
+# python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# jupyter
+.ipynb_checkpoints/
+
+# environment
+.env
+venv/
+*.egg-info/
+
+# OS files
+.DS_Store
+Thumbs.db
