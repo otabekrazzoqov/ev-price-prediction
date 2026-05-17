@@ -1,13 +1,7 @@
 # data files
-data/raw/
-data/preprocessed/
-data/final/
-*.csv
+
 
 # models
-models/
-*.joblib
-*.pkl
 
 # python cache
 __pycache__/
@@ -15,7 +9,6 @@ __pycache__/
 *.pyo
 
 # jupyter
-.ipynb_checkpoints/
 
 # environment
 .env
