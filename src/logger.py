@@ -4,7 +4,11 @@ import logging
 import os
 from datetime import datetime
 
-def get_logger(name: str, log_dir: str = "logs") -> logging.Logger:
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def get_logger(name: str, log_dir: str = None) -> logging.Logger:
+    if log_dir is None:
+        log_dir = os.path.join(ROOT_DIR, "logs")
     os.makedirs(log_dir, exist_ok=True)                       # Creating logs/ directory if it doesn't exist
 
     log_filename = os.path.join(
