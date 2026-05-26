@@ -3,12 +3,13 @@ import pandas as pd
 
 class Preprocessing:
     def __init__(self, df):                        
-        self.df = df.copy()               
+        self.df = df.copy()
+        self.label_encoders = {}               
 
     def handling_missing_values(self):
         for col in self.df.columns:
             if self.df[col].isnull().any():
-                if self.df[col].dtype == "str":
+                if self.df[col].dtype == "object":
                     self.df[col] = self.df[col].fillna(self.df[col].mode()[0])
                 else:
                     self.df[col] = self.df[col].fillna(self.df[col].mean())
@@ -19,9 +20,9 @@ class Preprocessing:
         for col in cols:
             if col == target_col:
                 continue
-            if self.df[col].dtype == "str":
+            if self.df[col].dtype == "object":
                 if self.df[col].nunique() <= 5:
-                    dummies = pd.get_dummies(self.df[col], prefix=col, dtype=int) 
+                    dummies = pd.get_dummies(self.df[col], prefix=col, dtype="object") 
                     self.df = pd.concat([self.df.drop(columns=col), dummies], axis=1)
                 else:
                     le = LabelEncoder()                     
