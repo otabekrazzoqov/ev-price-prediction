@@ -14,7 +14,8 @@ class Preprocessing:
         logger.info("Handling missing values...")
         for col in self.df.columns:
             if self.df[col].isnull().any():
-                if self.df[col].dtype == "object":
+                #if self.df[col].dtype == "object":
+                if pd.api.types.is_string_dtype(self.df[col]):   #!!!!!!!!!!!!!!!!!
                     self.df[col] = self.df[col].fillna(self.df[col].mode()[0])
                     logger.debug(f" [{col}] filled with mode")
                 else:
@@ -29,7 +30,8 @@ class Preprocessing:
         for col in cols:
             if col == target_col:
                 continue
-            if self.df[col].dtype == "object":
+            #if self.df[col].dtype == "object":
+            if pd.api.types.is_string_dtype(self.df[col]) and col != target_col:  # !!!!
                 if self.df[col].nunique() <= 5:
                     dummies = pd.get_dummies(self.df[col], prefix=col, dtype="int") 
                     self.df = pd.concat([self.df.drop(columns=col), dummies], axis=1)
