@@ -3,7 +3,6 @@ import pandas as pd
 from logger import get_logger
 
 logger = get_logger(__name__)
-
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class DataLoader:

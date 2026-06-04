@@ -31,7 +31,7 @@ class Preprocessing:
                 continue
             if self.df[col].dtype == "object":
                 if self.df[col].nunique() <= 5:
-                    dummies = pd.get_dummies(self.df[col], prefix=col, dtype="object") 
+                    dummies = pd.get_dummies(self.df[col], prefix=col, dtype="int") 
                     self.df = pd.concat([self.df.drop(columns=col), dummies], axis=1)
                 else:
                     le = LabelEncoder()                     
@@ -43,18 +43,21 @@ class Preprocessing:
     def scaling(self, target_col=None):
         logger.info("Scaling numerical columns...")
         num_cols = self.df.select_dtypes(
-            include=["int64", "float64"]
+            include=["int64", "float64","int16","int32", "int8"]
         ).columns.tolist()
 
         if target_col and target_col in num_cols:          
             num_cols.remove(target_col)
 
+        if not num_cols:
+            logger.warning("No numerical columns found to scale.")
+
         self.scaler = StandardScaler()                        
         self.df[num_cols] = self.scaler.fit_transform(self.df[num_cols])
-        logger.info("Scaling complete")
+        logger.info(f"Scaling complete | scaled {len(num_cols)} columns")
         return self
 
     def get_df(self):
-        logger.info("Returning preprocessed dataframe")                                      
+        logger.info(f"Returning preprocessed dataframe | shape: {self.df.shape}")                                      
         return self.df.copy()
     
