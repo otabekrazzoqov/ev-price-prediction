@@ -1,7 +1,4 @@
 """
-scripts/run_pipeline.py
-=======================
-Full end-to-end pipeline:
   1. Load raw data
   2. Split into train / test  (before ANY processing — no leakage)
   3. Feature engineering
