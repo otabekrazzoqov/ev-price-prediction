@@ -15,7 +15,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODELS_DIR = os.path.join(ROOT_DIR, "models")
 
 
-# ── Helpers ────────────────────────────────────────────────────────────────────
+# Helpers 
 
 def _get_X_y(df: pd.DataFrame, target_col: str):
     """Split a DataFrame into features X and target y."""
@@ -34,7 +34,7 @@ def _regression_metrics(y_true, y_pred) -> dict:
     return {"MAE": round(mae, 4), "RMSE": round(rmse, 4), "R2": round(r2, 4)}
 
 
-# ── Main Trainer class ─────────────────────────────────────────────────────────
+# Main Trainer class
 
 class Trainer:
     """
@@ -49,7 +49,7 @@ class Trainer:
         results = trainer.get_results()
     """
 
-    # Models to try — add or remove as needed
+    # Models to try 
     MODELS = {
         "ridge": Ridge(alpha=10.0),
         "random_forest": RandomForestRegressor(
@@ -75,7 +75,7 @@ class Trainer:
             f"test: {self.X_test.shape} | target: {target_col}"
         )
 
-    # ── public API ──────────────────────────────────────────────────────────
+    # ── public API 
 
     def train_all(self) -> "Trainer":
         """Train every model in MODELS and evaluate on the test set."""
@@ -128,7 +128,7 @@ class Trainer:
             raise RuntimeError("Call train_all() first.")
         return self.trained_models[self.best_model_name]
 
-    # ── private ─────────────────────────────────────────────────────────────
+    # ── private
 
     def _train_one(self, name: str, model) -> None:
         logger.info(f"Training '{name}'...")

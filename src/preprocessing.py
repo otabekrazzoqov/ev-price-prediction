@@ -14,9 +14,6 @@ class Preprocessing:
         self._target_col = None     # remembered so transform() can skip it
         logger.info(f"Preprocessing initialized | shape {self.df.shape}")
 
-    # ------------------------------------------------------------------ #
-    #  FIT methods  (call these on train data only)                        #
-    # ------------------------------------------------------------------ #
 
     def handling_missing_values(self):
         logger.info("Handling missing values...")
@@ -42,8 +39,7 @@ class Preprocessing:
         logger.info("Encoding categorical columns...")
         self._target_col = target_col
 
-        # Snapshot object columns BEFORE the loop to avoid iterating over
-        # a DataFrame whose columns are changing mid-loop.
+        
         object_cols = [
             col for col in self.df.columns
             if pd.api.types.is_string_dtype(self.df[col]) and col != target_col
@@ -70,7 +66,7 @@ class Preprocessing:
         if target_col:
             self._target_col = target_col
 
-        # FIX: include int8/int32 so freshly created dummy (0/1) columns are scaled too
+        
         num_cols = self.df.select_dtypes(
             include=["int8", "int32", "int64", "float32", "float64"]
         ).columns.tolist()
@@ -92,25 +88,10 @@ class Preprocessing:
         logger.info(f"Returning preprocessed dataframe | shape: {self.df.shape}")
         return self.df.copy()
 
-    # ------------------------------------------------------------------ #
-    #  TRANSFORM method  (call this on test / validation data)             #
-    # ------------------------------------------------------------------ #
+    
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Apply the encoders and scaler that were fitted on training data
-        to a new DataFrame (e.g. test set).  Never re-fits anything.
-
-        Parameters
-        ----------
-        df : pd.DataFrame
-            Raw DataFrame with the same columns as the training data.
-
-        Returns
-        -------
-        pd.DataFrame
-            Transformed copy — same structure as the fitted training output.
-        """
+        
         logger.info(f"Transforming new data | input shape: {df.shape}")
         out = df.copy()
 
@@ -121,7 +102,7 @@ class Preprocessing:
                     out[col] = out[col].fillna(fill_val)
                     logger.debug(f"[{col}] filled with train value: {fill_val!r}")
 
-        # 2. Apply encoding
+        #  Apply encoding
         for col, dummy_cols in self._dummy_columns.items():
             # One-hot encode with the same prefix
             dummies = pd.get_dummies(out[col], prefix=col, dtype=int)
@@ -152,7 +133,7 @@ class Preprocessing:
                 out[col] = out[col].apply(lambda x: x if x in known else fallback)
             out[col] = le.transform(out[col])
 
-        # 3. Apply scaling (same column order as training)
+        #  Apply scaling (same column order as training)
         if self.scaler is not None and hasattr(self, "_scaled_cols"):
             # Only scale columns that actually exist in the test set
             cols_to_scale = [c for c in self._scaled_cols if c in out.columns]
